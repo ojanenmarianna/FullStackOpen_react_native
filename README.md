@@ -1,1 +1,1 @@
-# FullStackOpen_react_native
+# FullStack Open part 10: React Native
