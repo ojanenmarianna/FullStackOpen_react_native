@@ -2,6 +2,7 @@ import React from 'react'
 import { View, TextInput, Pressable, StyleSheet } from 'react-native'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+
 import Text from './Text'
 import useSignIn from '../hooks/useSignIn'
 import AuthStorage from '../utils/authStorage'
@@ -50,28 +51,16 @@ const validationSchema = yup.object().shape({
     .required('Password is required'),
 })
 
-const SignIn = () => {
-  const [signIn] = useSignIn()
-  const authStorage = new AuthStorage()
-
-  const onSubmit = async (values) => {
-    const { username, password } = values
-
-    try {
-      const { authenticate } = await signIn({ username, password })
-      await authStorage.setAccessToken(authenticate.accessToken)
-      console.log('Access token stored')
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
+export const SignInContainer = ({ onSubmit }) => {
   const formik = useFormik({
-    initialValues,
-    validationSchema,
+    initialValues: { username: '', password: '' },
+    validationSchema: yup.object().shape({
+      username: yup.string().required('Username is required'),
+      password: yup.string().required('Password is required'),
+    }),
     onSubmit,
   })
-
+  
   return (
     <View style={styles.container}>
       <TextInput
@@ -83,6 +72,7 @@ const SignIn = () => {
           styles.input,
           formik.touched.username && formik.errors.username && styles.errorInput,
         ]}
+        testID="usernameInput"
       />
       {formik.touched.username && formik.errors.username && (
         <Text style={styles.errorText}>{formik.errors.username}</Text>
@@ -98,16 +88,40 @@ const SignIn = () => {
           styles.input,
           formik.touched.password && formik.errors.password && styles.errorInput,
         ]}
+        testID="passwordInput"
       />
       {formik.touched.password && formik.errors.password && (
         <Text style={styles.errorText}>{formik.errors.password}</Text>
       )}
 
-      <Pressable onPress={formik.handleSubmit} style={styles.button}>
+      <Pressable
+        onPress={formik.handleSubmit}
+        style={styles.button}
+        testID="submitButton"
+      >
         <Text style={styles.buttonText}>Sign in</Text>
       </Pressable>
     </View>
   )
+}
+
+const SignIn = () => {
+  const [signIn] = useSignIn()
+  const authStorage = new AuthStorage()
+
+  const handleSubmit = async (values) => {
+    const { username, password } = values
+
+    try {
+      const { authenticate } = await signIn({ username, password })
+      await authStorage.setAccessToken(authenticate.accessToken)
+      console.log('Access token stored')
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  return <SignInContainer onSubmit={handleSubmit} />
 }
 
 export default SignIn
