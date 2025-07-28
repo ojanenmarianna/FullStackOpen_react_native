@@ -37,20 +37,6 @@ const styles = StyleSheet.create({
   },
 })
 
-const initialValues = {
-  username: '',
-  password: '',
-}
-
-const validationSchema = yup.object().shape({
-  username: yup
-    .string()
-    .required('Username is required'),
-  password: yup
-    .string()
-    .required('Password is required'),
-})
-
 export const SignInContainer = ({ onSubmit }) => {
   const formik = useFormik({
     initialValues: { username: '', password: '' },

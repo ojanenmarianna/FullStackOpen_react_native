@@ -3,15 +3,17 @@ import { gql } from '@apollo/client';
 export const REPOSITORY_NODE_DETAILS = gql`
   fragment RepositoryNodeDetails on Repository {
     id
-      fullName
-      description
-      language
-      forksCount
-      stargazersCount
-      ratingAverage
-      reviewCount
-      ownerAvatarUrl
-      url
+    fullName
+    ownerName
+    description
+    language
+    forksCount
+    stargazersCount
+    ratingAverage
+    reviewCount
+    ownerAvatarUrl
+    createdAt
+    url
   }
 `
 
